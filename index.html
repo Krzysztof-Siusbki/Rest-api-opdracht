@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gilde Devops Locatie</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map { height: 630px; width: 100%; }
+    h1 { margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Gilde Devops Locatie – Roermond Marathonlaan</h1>
+  <div id="map"></div>
+
+  <!-- leaflet include -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Met leaflet de map laten zien (centeren op Roermond)
+    const map = L.map('map').setView([51.18655, 5.99233], 17);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Point erbij (pijl-marker)
+    const marker = L.marker([51.18655, 5.99233]).addTo(map);
+
+    marker.bindPopup(
+      "<b>Gilde Opleidingen</b><br>Marathonlaan 2<br>Roermond"
+    ).openPopup();
+  </script>
+</body>
+</html>
