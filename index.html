@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gilde Devops Locatie</title>
+  <title>Gilde Opleidingen – Marathonlaan</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
     #map { height: 630px; width: 100%; }
@@ -11,25 +11,46 @@
   </style>
 </head>
 <body>
-  <h1>Gilde Devops Locatie – Roermond Marathonlaan</h1>
+  <h1>Gilde Opleidingen – Marathonlaan, Roermond</h1>
   <div id="map"></div>
 
   <!-- leaflet include -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    // Met leaflet de map laten zien (centeren op Roermond)
-    const map = L.map('map').setView([51.18655, 5.99233], 17);
+    // Met leaflet de map laten zien (default NL)
+    const map = L.map('map').setView([52.1, 5.1], 8);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Point erbij (pijl-marker)
-    const marker = L.marker([51.18655, 5.99233]).addTo(map);
+    // fetch url
+    fetch("https://nominatim.openstreetmap.org/search?format=json&q=gilde%20opleidingen")
+      .then(res => res.json())
+      .then(data => {
+        console.log("Nominatim resultaten:", data);
 
-    marker.bindPopup(
-      "<b>Gilde Opleidingen</b><br>Marathonlaan 2<br>Roermond"
-    ).openPopup();
+        // json parsen + filter op Marathonlaan
+        const result = data.find(item =>
+          item.display_name.toLowerCase().includes("marathonlaan")
+        );
+
+        if (result) {
+          const lat = parseFloat(result.lat);
+          const lon = parseFloat(result.lon);
+
+          // Point erbij
+          map.setView([lat, lon], 17);
+          L.marker([lat, lon]).addTo(map)
+            .bindPopup(
+              `<b>${result.name}</b><br>${result.display_name}<br>Lat: ${lat}, Lon: ${lon}`
+            )
+            .openPopup();
+        } else {
+          alert("Geen locatie met Marathonlaan gevonden!");
+        }
+      })
+      .catch(err => console.error("Fout:", err));
   </script>
 </body>
 </html>
